@@ -3,7 +3,6 @@ import logging
 from zabbixci.assets.global_macro import GlobalMacro
 from zabbixci.cache.filesystem import Filesystem
 from zabbixci.handlers.validation.validation_handler import Handler
-from zabbixci.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +13,10 @@ class GlobalMacroValidationHandler(Handler):
     """
 
     def get_whitelist(self):
-        return Settings.get_global_macro_whitelist()
+        return self.settings.get_global_macro_whitelist()
 
     def get_blacklist(self):
-        return Settings.get_global_macro_blacklist()
+        return self.settings.get_global_macro_blacklist()
 
     def read_validation(self, changed_file: str) -> bool:
         """
@@ -27,7 +26,8 @@ class GlobalMacroValidationHandler(Handler):
             return False
 
         if not Filesystem.is_within(
-            changed_file, f"{Settings.CACHE_PATH}/{Settings.GLOBAL_MACRO_PREFIX_PATH}"
+            changed_file,
+            f"{self.settings.CACHE_PATH}/{self.settings.GLOBAL_MACRO_PREFIX_PATH}",
         ):
             logger.debug(
                 "Skipping .yaml file %s outside of global macro prefix path",
@@ -50,4 +50,3 @@ class GlobalMacroValidationHandler(Handler):
             return False
 
         return True
-

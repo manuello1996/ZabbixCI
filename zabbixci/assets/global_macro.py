@@ -7,7 +7,7 @@ from ruamel.yaml import YAML
 
 from zabbixci.assets.asset import Asset
 from zabbixci.cache.cache import Cache
-from zabbixci.settings import Settings
+from zabbixci.settings import ApplicationSettings
 
 logger = logging.getLogger(__name__)
 yaml = YAML()
@@ -60,16 +60,16 @@ class GlobalMacro(Asset):
 
     @property
     def cache_path(self) -> str:
-        return (
-            f"{Settings.CACHE_PATH}/{Settings.GLOBAL_MACRO_PREFIX_PATH}/{self.filename}"
-        )
+        return f"{ApplicationSettings.CACHE_PATH}/{ApplicationSettings.GLOBAL_MACRO_PREFIX_PATH}/{self.filename}"
 
     @property
     def is_secret(self) -> bool:
         return self.type == SECRET_TYPE or self.value == HIDDEN_VALUE
 
     def save(self):
-        Cache.makedirs(f"{Settings.CACHE_PATH}/{Settings.GLOBAL_MACRO_PREFIX_PATH}/")
+        Cache.makedirs(
+            f"{ApplicationSettings.CACHE_PATH}/{ApplicationSettings.GLOBAL_MACRO_PREFIX_PATH}/"
+        )
 
         with Cache.open(self.cache_path, "w") as file:
             self._yaml_dump(file)

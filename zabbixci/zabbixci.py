@@ -10,15 +10,15 @@ from ruamel.yaml import YAML
 from zabbixci.assets import Template
 from zabbixci.cache.cleanup import Cleanup
 from zabbixci.git import Git, GitCredentials
+from zabbixci.handlers.synchronization.global_macro_synchronization import (
+    GlobalMacroHandler,
+)
 from zabbixci.handlers.synchronization.icon_map_synchronization import IconMapHandler
 from zabbixci.handlers.synchronization.image_synchronization import ImageHandler
 from zabbixci.handlers.synchronization.script_synchronization import ScriptHandler
 from zabbixci.handlers.synchronization.template_synchronization import TemplateHandler
 from zabbixci.settings import ApplicationSettings
 from zabbixci.zabbix import Zabbix, ZabbixConstants
-from zabbixci.handlers.synchronization.global_macro_synchronization import (
-    GlobalMacroHandler,
-)
 
 
 class ZabbixCI:

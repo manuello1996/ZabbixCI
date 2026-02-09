@@ -91,6 +91,7 @@ class ApplicationSettings:
         self.IMAGE_PREFIX_PATH = "images"
         self.ICON_MAP_PREFIX_PATH = "icon-maps"
         self.SCRIPT_PREFIX_PATH = "scripts"
+        self.GLOBAL_MACRO_PREFIX_PATH = "global-macros"
         self.TEMPLATE_WHITELIST = ""
         self.TEMPLATE_BLACKLIST = ""
         self.CACHE_PATH = "./cache"
@@ -156,9 +157,6 @@ class ApplicationSettings:
     def get_script_blacklist(self):
         return self.SCRIPT_BLACKLIST.split(",") if self.SCRIPT_BLACKLIST else []
 
-    def get_icon_sizes(self):
-        size_strings = self.ICON_SIZES.split(",") if self.ICON_SIZES else []
-
     @classmethod
     def get_global_macro_whitelist(cls):
         return (
@@ -171,9 +169,8 @@ class ApplicationSettings:
             cls.GLOBAL_MACRO_BLACKLIST.split(",") if cls.GLOBAL_MACRO_BLACKLIST else []
         )
 
-    @classmethod
-    def get_icon_sizes(cls):
-        size_strings = cls.ICON_SIZES.split(",") if cls.ICON_SIZES else []
+    def get_icon_sizes(self):
+        size_strings = self.ICON_SIZES.split(",") if self.ICON_SIZES else []
         return [int(size) for size in size_strings]
 
     def get_background_sizes(self):

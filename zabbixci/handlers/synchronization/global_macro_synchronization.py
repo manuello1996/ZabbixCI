@@ -1,10 +1,9 @@
 import logging
 
-from zabbixci.assets.global_macro import GlobalMacro, HIDDEN_VALUE, SECRET_TYPE
+from zabbixci.assets.global_macro import HIDDEN_VALUE, SECRET_TYPE, GlobalMacro
 from zabbixci.handlers.validation.global_macro_validation import (
     GlobalMacroValidationHandler,
 )
-from zabbixci.settings import Settings
 from zabbixci.zabbix.zabbix import Zabbix
 
 logger = logging.getLogger(__name__)
@@ -24,7 +23,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
         """
         Export Zabbix global macros to the cache.
         """
-        if not Settings.SYNC_GLOBAL_MACROS:
+        if not self.settings.SYNC_GLOBAL_MACROS:
             return []
 
         search = (
@@ -61,7 +60,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
         """
         Import global macros into Zabbix based on changed files.
         """
-        if not Settings.SYNC_GLOBAL_MACROS:
+        if not self.settings.SYNC_GLOBAL_MACROS:
             return []
 
         macros: list[GlobalMacro] = []
@@ -107,7 +106,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
         failed_macros: list[GlobalMacro] = []
 
         for macro in macros:
-            if Settings.DRY_RUN:
+            if self.settings.DRY_RUN:
                 continue
 
             try:
@@ -120,7 +119,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
                 logger.debug("Error details: %s", e)
                 failed_macros.append(macro)
 
-        if failed_macros and not Settings.DRY_RUN:
+        if failed_macros and not self.settings.DRY_RUN:
             for macro in failed_macros:
                 try:
                     __import_macro(macro)
@@ -144,7 +143,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
         """
         Delete global macros from Zabbix based on deleted files.
         """
-        if not Settings.SYNC_GLOBAL_MACROS:
+        if not self.settings.SYNC_GLOBAL_MACROS:
             return []
 
         deletion_queue: list[str] = []
@@ -156,7 +155,9 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
             macro = GlobalMacro.partial_open(file)
 
             if not macro:
-                logger.warning("Could not open macro file slated for deletion: %s", file)
+                logger.warning(
+                    "Could not open macro file slated for deletion: %s", file
+                )
                 continue
 
             if not self.object_validation(macro):
@@ -180,7 +181,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
 
             logger.info("Deleting %s global macro(s) from Zabbix", len(macro_ids))
 
-            if macro_ids and not Settings.DRY_RUN:
+            if macro_ids and not self.settings.DRY_RUN:
                 self._zabbix.delete_global_macros([int(mid) for mid in macro_ids])
 
         return deletion_queue

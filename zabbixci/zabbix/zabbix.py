@@ -3,7 +3,7 @@ from ssl import SSLContext
 
 import aiohttp
 from ruamel.yaml import YAML
-from zabbix_utils import AsyncZabbixAPI  # type: ignore
+from zabbix_utils.aioapi import AsyncZabbixAPI
 
 from zabbixci.assets import Template
 
@@ -50,7 +50,7 @@ class Zabbix:
             "searchWildcardsEnabled": True,
         }
 
-        if self.api_version < 7.0:
+        if self.api_version < ZabbixConstants.TEMPLATE_GROUP_API_VERSION_THRESHOLD:
             return self.zapi.send_sync_request("hostgroup.get", params)["result"]
         else:
             return self.zapi.send_sync_request(
@@ -115,7 +115,8 @@ class Zabbix:
                                 "updateExisting": True,
                             },
                         }
-                        if self.api_version >= 7.0
+                        if self.api_version
+                        >= ZabbixConstants.TEMPLATE_GROUP_API_VERSION_THRESHOLD
                         else {
                             "groups": {
                                 "createMissing": True,
