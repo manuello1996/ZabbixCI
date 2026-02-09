@@ -72,16 +72,6 @@ class BaseGlobalMacro(BaseTest):
     async def test_global_macro_delete(self):
         # Get a global macro
         macros = self.zci._zabbix.get_global_macros(["{$TEST_MACRO}"])
-        if not macros:
-            # Create a test macro if it doesn't exist
-            self.zci._zabbix.create_global_macro(
-                {
-                    "macro": "{$TEST_MACRO}",
-                    "value": "test_value",
-                    "description": "Test macro",
-                }
-            )
-            macros = self.zci._zabbix.get_global_macros(["{$TEST_MACRO}"])
 
         macro_id = macros[0]["globalmacroid"]
         self.zci._zabbix.delete_global_macros([macro_id])
