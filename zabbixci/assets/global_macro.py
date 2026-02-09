@@ -55,19 +55,18 @@ class GlobalMacro(Asset):
         return slugify(self.name)
 
     @property
-    def cache_path(self) -> str:
-        return f"{ApplicationSettings.CACHE_PATH}/{ApplicationSettings.GLOBAL_MACRO_PREFIX_PATH}/{self.filename}"
-
-    @property
     def is_secret(self) -> bool:
         return self.type == SECRET_TYPE or self.value == HIDDEN_VALUE
 
-    def save(self):
-        Cache.makedirs(
-            f"{ApplicationSettings.CACHE_PATH}/{ApplicationSettings.GLOBAL_MACRO_PREFIX_PATH}/"
-        )
+    def save(self, settings: ApplicationSettings):
+        cache_path = f"{settings.CACHE_PATH}/{settings.GLOBAL_MACRO_PREFIX_PATH}/"
 
-        with Cache.open(self.cache_path, "w") as file:
+        Cache.makedirs(cache_path)
+
+        with Cache.open(
+            f"{cache_path}/{self.filename}",
+            "w",
+        ) as file:
             self._yaml_dump(file)
 
     def minify(self):
