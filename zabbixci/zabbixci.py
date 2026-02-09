@@ -134,7 +134,7 @@ class ZabbixCI:
         image_handler = ImageHandler(self._zabbix, self.settings)
         icon_map_handler = IconMapHandler(self._zabbix, self.settings)
         script_handler = ScriptHandler(self._zabbix, self.settings)
-        macro_handler = GlobalMacroHandler(self._zabbix)
+        macro_handler = GlobalMacroHandler(self._zabbix, self.settings)
 
         template_objects = await template_handler.templates_to_cache()
         image_objects = image_handler.images_to_cache()
@@ -287,7 +287,7 @@ class ZabbixCI:
         image_handler = ImageHandler(self._zabbix, self.settings)
         icon_map_handler = IconMapHandler(self._zabbix, self.settings)
         script_handler = ScriptHandler(self._zabbix, self.settings)
-        macro_handler = GlobalMacroHandler(self._zabbix)
+        macro_handler = GlobalMacroHandler(self._zabbix, self.settings)
 
         template_objects = await template_handler.templates_to_cache()
         image_objects = image_handler.images_to_cache()

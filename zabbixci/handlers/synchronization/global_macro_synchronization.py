@@ -4,6 +4,7 @@ from zabbixci.assets.global_macro import HIDDEN_VALUE, SECRET_TYPE, GlobalMacro
 from zabbixci.handlers.validation.global_macro_validation import (
     GlobalMacroValidationHandler,
 )
+from zabbixci.settings import ApplicationSettings
 from zabbixci.zabbix.zabbix import Zabbix
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,8 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
 
     _zabbix: Zabbix
 
-    def __init__(self, zabbix: Zabbix):
+    def __init__(self, zabbix: Zabbix, settings: ApplicationSettings):
+        super().__init__(settings)
         self._zabbix = zabbix
 
     def global_macros_to_cache(self) -> list[GlobalMacro]:
@@ -47,7 +49,7 @@ class GlobalMacroHandler(GlobalMacroValidationHandler):
             if not self.object_validation(macro_object):
                 continue
 
-            macro_object.save()
+            macro_object.save(self.settings)
             macro_objects.append(macro_object.minify())
 
         return macro_objects
