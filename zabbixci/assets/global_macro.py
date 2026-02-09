@@ -1,4 +1,3 @@
-import hashlib
 import logging
 import re
 from typing import TextIO
@@ -21,10 +20,7 @@ def slugify(name: str) -> str:
     Create a stable, filesystem-safe filename for a macro name.
     """
     clean = re.sub(r"[^A-Za-z0-9._-]+", "_", name).strip("_")
-    if not clean:
-        clean = "macro"
-    digest = hashlib.sha1(name.encode("utf-8")).hexdigest()[:8]
-    return f"{clean}_{digest}.yaml"
+    return f"{clean}.yaml"
 
 
 class GlobalMacro(Asset):
